@@ -66,16 +66,20 @@ class Resource
     /** @var array $methods */
     private $methods;
 
+    /** @var \Google\Service $service */
+    protected $service;
+
     public function __construct($service, $serviceName, $resourceName, $resource)
     {
+        $this->service = $service;
         $this->rootUrlTemplate = $service->rootUrlTemplate ?? $service->rootUrl;
         $this->client = $service->getClient();
         $this->servicePath = $service->servicePath;
         $this->serviceName = $serviceName;
         $this->resourceName = $resourceName;
         $this->methods = is_array($resource) && isset($resource['methods']) ?
-        $resource['methods'] :
-        [$resourceName => $resource];
+            $resource['methods'] :
+            [$resourceName => $resource];
     }
 
     /**
@@ -278,9 +282,10 @@ class Resource
             $requestUrl = $this->servicePath . $restPath;
         }
 
-        if ($this->rootUrlTemplate) {
+        $rootUrlTemplate = $this->service->rootUrlTemplate ?? $this->service->rootUrl ?? null;
+        if ($rootUrlTemplate) {
             // code for universe domain
-            $rootUrl = str_replace('UNIVERSE_DOMAIN', $this->client->getUniverseDomain(), $this->rootUrlTemplate);
+            $rootUrl = str_replace('UNIVERSE_DOMAIN', $this->client->getUniverseDomain(), $rootUrlTemplate);
             // code for leading slash
             if ('/' !== substr($rootUrl, -1) && '/' !== substr($requestUrl, 0, 1)) {
                 $requestUrl = '/' . $requestUrl;

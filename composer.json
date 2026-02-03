@@ -30,7 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Google\\": "src/"
+            "Google\\": "src/",
+            "Google\\Service\\AndroidPublisher\\": "src/Service/AndroidPublisher/"
         },
         "files": [
             "src/aliases.php"

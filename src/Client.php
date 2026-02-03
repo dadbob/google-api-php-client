@@ -29,6 +29,7 @@ use Google\Auth\CredentialsLoader;
 use Google\Auth\FetchAuthTokenCache;
 use Google\Auth\FetchAuthTokenInterface;
 use Google\Auth\GetUniverseDomainInterface;
+use Google\Auth\JwtBearerCredentials;
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use Google\Auth\OAuth2;
 use Google\AuthHandler\AuthHandlerFactory;
@@ -232,9 +233,9 @@ class Client
             $this->config['token_callback'] = function ($cacheKey, $newAccessToken) {
                 $this->setAccessToken(
                     [
-                    'access_token' => $newAccessToken,
-                    'expires_in' => 3600, // Google default
-                    'created' => time(),
+                        'access_token' => $newAccessToken,
+                        'expires_in' => 3600, // Google default
+                        'created' => time(),
                     ]
                 );
             };
@@ -423,18 +424,18 @@ class Client
             : var_export($this->config['include_granted_scopes'], true);
 
         $params = array_filter([
-            'access_type' => $this->config['access_type'],
-            'approval_prompt' => $approvalPrompt,
-            'hd' => $this->config['hd'],
-            'include_granted_scopes' => $includeGrantedScopes,
-            'login_hint' => $this->config['login_hint'],
-            'openid.realm' => $this->config['openid.realm'],
-            'prompt' => $this->config['prompt'],
-            'redirect_uri' => $this->config['redirect_uri'],
-            'response_type' => 'code',
-            'scope' => $scope,
-            'state' => $this->config['state'],
-        ]) + $queryParams;
+                'access_type' => $this->config['access_type'],
+                'approval_prompt' => $approvalPrompt,
+                'hd' => $this->config['hd'],
+                'include_granted_scopes' => $includeGrantedScopes,
+                'login_hint' => $this->config['login_hint'],
+                'openid.realm' => $this->config['openid.realm'],
+                'prompt' => $this->config['prompt'],
+                'redirect_uri' => $this->config['redirect_uri'],
+                'response_type' => 'code',
+                'scope' => $scope,
+                'state' => $this->config['state'],
+            ]) + $queryParams;
 
         // If the list of scopes contains plus.login, add request_visible_actions
         // to auth URL.
@@ -1082,6 +1083,54 @@ class Client
     }
 
     /**
+     * Set JWT Bearer auth config from a serviceAccount.json file with custom format.
+     * The file should contain 'kid' and 'privateKeyPem' fields.
+     *
+     * @param string|array $config Path to JSON file or array with config
+     * @throws \Google\Exception
+     */
+    public function setJwtBearerAuthConfig($config)
+    {
+        if (is_string($config)) {
+            if (!file_exists($config)) {
+                throw new InvalidArgumentException(sprintf('file "%s" does not exist', $config));
+            }
+
+            $json = file_get_contents($config);
+
+            if (!$config = json_decode($json, true)) {
+                throw new LogicException('invalid json for auth config');
+            }
+        }
+
+        if (!isset($config['kid']) || empty($config['kid'])) {
+            throw new InvalidArgumentException('kid is required in serviceAccount.json');
+        }
+
+        if (!isset($config['privateKeyPem']) || empty($config['privateKeyPem'])) {
+            throw new InvalidArgumentException('privateKeyPem is required in serviceAccount.json');
+        }
+
+        $this->credentials = new JwtBearerCredentials(
+            $config['kid'],
+            $config['privateKeyPem']
+        );
+    }
+
+    /**
+     * Helper method to load JWT Bearer credentials from a serviceAccount.json file.
+     *
+     * @param string $file Path to serviceAccount.json file
+     * @return Client Returns $this for method chaining
+     * @throws \Google\Exception
+     */
+    public function fromServiceAccountFile($file)
+    {
+        $this->setJwtBearerAuthConfig($file);
+        return $this;
+    }
+
+    /**
      * Declare whether making API calls should make the call immediately, or
      * return a request which can be called with ->execute();
      *
@@ -1364,5 +1413,15 @@ class Client
     public function getUniverseDomain()
     {
         return $this->config['universe_domain'];
+    }
+
+    /**
+     * Get the credentials instance.
+     *
+     * @return FetchAuthTokenInterface|null
+     */
+    public function getCredentials()
+    {
+        return $this->credentials;
     }
 }

@@ -26,6 +26,7 @@ $classMap = [
     'Google\\Service\\Exception' => 'Google_Service_Exception',
     'Google\\Service\\Resource' => 'Google_Service_Resource',
     'Google\\Exception' => 'Google_Exception',
+    'Google\\Service\\AndroidPublisher\\AndroidPublisher' => 'Google_Service_AndroidPublisher',
 ];
 
 foreach ($classMap as $class => $alias) {
@@ -85,6 +86,9 @@ if (\false) {
     {
     }
     class Google_Service_Resource extends \Google\Service\Resource
+    {
+    }
+    class Google_Service_AndroidPublisher extends \Google\Service\AndroidPublisher\AndroidPublisher
     {
     }
     class Google_Task_Exception extends \Google\Task\Exception
