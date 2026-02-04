@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-namespace Google\Task;
+namespace Appning\Task;
 
-use Google\Service\Exception as GoogleServiceException;
-use Google\Task\Exception as GoogleTaskException;
+use Appning\Service\Exception as GoogleServiceException;
+use Appning\Task\Exception as GoogleTaskException;
 
 /**
  * A task runner with exponential backoff support.

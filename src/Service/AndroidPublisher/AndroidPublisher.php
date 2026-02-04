@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-namespace Google\Service\AndroidPublisher;
+namespace Appning\Service\AndroidPublisher;
 
-use Google\Service;
-use Google\Service\AndroidPublisher\Resource\MonetizationOneTimeProducts;
+use Appning\Service;
+use Appning\Service\AndroidPublisher\Resource\MonetizationOneTimeProducts;
 
 /**
  * Service definition for AndroidPublisher (v3).

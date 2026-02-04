@@ -11,6 +11,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Appning\Client as Appning_Client;
+use Appning\Service\AndroidPublisher\AndroidPublisher;
+use Appning\Exception as Appning_Exception;
+
 // Check if serviceAccount.json exists
 $serviceAccountFile = __DIR__ . '/../serviceAccount.json';
 if (!file_exists($serviceAccountFile)) {
@@ -21,13 +25,12 @@ if (!file_exists($serviceAccountFile)) {
 
 try {
     // 1. Load client from serviceAccount.json
-    $client = new Google_Client();
+    $client = new Appning_Client();
+
     $client->fromServiceAccountFile($serviceAccountFile);
-    // $client->
 
     // 2. Create the AndroidPublisher service
-    // Using alias Google_Service_AndroidPublisher (no use statement needed)
-    $service = new Google_Service_AndroidPublisher($client);
+    $service = new AndroidPublisher($client);
 
     // 3. Build the request body for batch update
     $packageName = "com.example.app";
@@ -36,7 +39,7 @@ try {
     $batchRequestBody = [
         "oneTimeProduct" => [
             "packageName" => $packageName,
-            "productId" => "coin_pack_etc_".time(),
+            "productId" => "coin_pack_etc_" . time(),
             "listings" => [
                 [
                     "languageCode" => "pt-BR",
@@ -87,11 +90,10 @@ try {
         $packageName,
         $batchRequestBody
     );
-    //$service->
 
     // Success: HTTP status code is in 2XX range
     echo "✅ Success\n";
-} catch (Google_Service_Exception $e) {
+} catch (Appning_Exception $e) {
     // Error: HTTP status code is not in 2XX range
     echo "❌ Error (HTTP {$e->getCode()}): {$e->getMessage()}\n";
     if ($e->getErrors()) {

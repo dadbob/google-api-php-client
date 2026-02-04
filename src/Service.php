@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Google;
+namespace Appning;
 
-use Google\Http\Batch;
+use Appning\Http\Batch;
 use TypeError;
 
 class Service

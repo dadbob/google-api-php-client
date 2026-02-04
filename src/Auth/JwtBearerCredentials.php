@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
-namespace Google\Auth;
+namespace Appning\Auth;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use InvalidArgumentException;
+use Google\Auth\FetchAuthTokenInterface;
+
 
 /**
  * Credentials that generate RS256 JWT Bearer tokens with a kid header.

@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-namespace Google;
+namespace Appning;
 
 use BadMethodCallException;
 use DomainException;
-use Google\AccessToken\Revoke;
-use Google\AccessToken\Verify;
+use Appning\AccessToken\Revoke;
+use Appning\AccessToken\Verify;
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\Cache\MemoryCacheItemPool;
 use Google\Auth\Credentials\ServiceAccountCredentials;
@@ -29,11 +29,11 @@ use Google\Auth\CredentialsLoader;
 use Google\Auth\FetchAuthTokenCache;
 use Google\Auth\FetchAuthTokenInterface;
 use Google\Auth\GetUniverseDomainInterface;
-use Google\Auth\JwtBearerCredentials;
+use Appning\Auth\JwtBearerCredentials;
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use Google\Auth\OAuth2;
-use Google\AuthHandler\AuthHandlerFactory;
-use Google\Http\REST;
+use Appning\AuthHandler\AuthHandlerFactory;
+use Appning\Http\REST;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Ring\Client\StreamHandler;

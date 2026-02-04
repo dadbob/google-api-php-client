@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-namespace Google\Http;
+namespace Appning\Http;
 
 use Google\Auth\HttpHandler\HttpHandlerFactory;
-use Google\Service\Exception as GoogleServiceException;
-use Google\Task\Runner;
+use Appning\Service\Exception as GoogleServiceException;
+use Appning\Task\Runner;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Response;

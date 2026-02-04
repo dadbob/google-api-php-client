@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-namespace Google\Service;
+namespace Appning\Service;
 
-use Google\Exception as GoogleException;
-use Google\Http\MediaFileUpload;
-use Google\Model;
-use Google\Utils\UriTemplate;
+use Appning\Exception as GoogleException;
+use Appning\Http\MediaFileUpload;
+use Appning\Model;
+use Appning\Utils\UriTemplate;
 use GuzzleHttp\Psr7\Request;
 
 /**

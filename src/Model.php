@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Google;
+namespace Appning;
 
-use Google\Exception as GoogleException;
+use Appning\Exception as GoogleException;
 use ReflectionObject;
 use ReflectionProperty;
 use stdClass;

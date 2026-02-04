@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-namespace Google\Service\AndroidPublisher\Resource;
+namespace Appning\Service\AndroidPublisher\Resource;
 
-use Google\Auth\JwtBearerCredentials;
-use Google\Exception as GoogleException;
-use Google\Service;
-use Google\Service\Resource;
+use Appning\Auth\JwtBearerCredentials;
+use Appning\Exception as GoogleException;
+use Appning\Service;
+use Appning\Service\Resource;
 use Psr\Http\Message\RequestInterface;
 
 /**
