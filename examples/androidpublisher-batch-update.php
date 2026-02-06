@@ -34,7 +34,6 @@ try {
 
     // 3. Build the request body for batch update
     $packageName = "com.example.app";
-    $packageName = "com.soundcloud.android";
 
     $batchRequestBody = [
         "oneTimeProduct" => [

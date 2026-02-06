@@ -31,8 +31,8 @@ use Appning\Service\AndroidPublisher\Resource\MonetizationOneTimeProducts;
  */
 class AndroidPublisher extends Service
 {
-    public $rootUrl = 'http://product.faa.local.faurecia-aptoide.com/api/8.20240517';
-    public $rootUrlTemplate = 'http://product.faa.local.faurecia-aptoide.com/api/8.20240517';
+    public $rootUrl = 'https://product.faa.faurecia-aptoide.com/api/8.20240517';
+    public $rootUrlTemplate = 'https://product.faa.faurecia-aptoide.com/api/8.20240517';
     public $servicePath = '';
     public $version = 'v3';
     public $serviceName = 'androidpublisher';
