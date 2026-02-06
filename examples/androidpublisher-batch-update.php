@@ -88,7 +88,7 @@ try {
     echo "Calling batchUpdate for package: {$packageName}\n";
     $response = $service->monetization_onetimeproducts->batchUpdate(
         $packageName,
-        $batchRequestBody
+        ['requests'=>$batchRequestBody]
     );
 
     // Success: HTTP status code is in 2XX range
