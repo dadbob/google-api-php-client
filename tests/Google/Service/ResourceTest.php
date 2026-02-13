@@ -33,7 +33,7 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use Prophecy\Argument;
 
-class TestService extends \Google\Service
+class TestService extends \Appning\Service
 {
     public function __construct(Client $client, $rootUrl = null)
     {

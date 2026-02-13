@@ -36,7 +36,6 @@ use Appning\AuthHandler\AuthHandlerFactory;
 use Appning\Http\REST;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Ring\Client\StreamHandler;
 use InvalidArgumentException;
 use LogicException;
 use Monolog\Handler\StreamHandler as MonologStreamHandler;
@@ -54,12 +53,12 @@ use UnexpectedValueException;
  */
 class Client
 {
-    const LIBVER = "2.12.6";
-    const USER_AGENT_SUFFIX = "google-api-php-client/";
-    const OAUTH2_REVOKE_URI = 'https://oauth2.googleapis.com/revoke';
-    const OAUTH2_TOKEN_URI = 'https://oauth2.googleapis.com/token';
-    const OAUTH2_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
-    const API_BASE_PATH = 'https://www.googleapis.com';
+    public const LIBVER = "2.12.6";
+    public const USER_AGENT_SUFFIX = "google-api-php-client/";
+    public const OAUTH2_REVOKE_URI = 'https://oauth2.googleapis.com/revoke';
+    public const OAUTH2_TOKEN_URI = 'https://oauth2.googleapis.com/token';
+    public const OAUTH2_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
+    public const API_BASE_PATH = 'https://www.googleapis.com';
 
     /**
      * @var ?OAuth2 $auth
@@ -97,7 +96,7 @@ class Client
     private $credentials;
 
     /**
-     * @var boolean $deferExecution
+     * @var bool $deferExecution
      */
     private $deferExecution = false;
 
@@ -122,10 +121,10 @@ class Client
      *           Your Google Cloud client secret found in https://developers.google.com/console
      *     @type string|array|FetchAuthTokenInterface $credentials
      *           Can be a path to JSON credentials or an array representing those
-     *           credentials (@see Google\Client::setAuthConfig), or an instance of
+     *           credentials (@see \Appning\Client::setAuthConfig), or an instance of
      *           {@see FetchAuthTokenInterface}.
      *     @type string|array $scopes
-     *           {@see Google\Client::setScopes}
+     *           {@see \Appning\Client::setScopes}
      *     @type string $quota_project
      *           Sets X-Goog-User-Project, which specifies a user project to bill
      *           for access charges associated with the request.
@@ -155,7 +154,7 @@ class Client
      *     @type string $approval_prompt
      *     @type array $retry
      *           Task Runner retry configuration
-     *           {@see \Google\Task\Runner}
+     *           {@see \Appning\Task\Runner}
      *     @type array $retry_map
      *     @type CacheItemPoolInterface $cache
      *           Cache class implementing {@see CacheItemPoolInterface}. Defaults
@@ -435,7 +434,7 @@ class Client
                 'response_type' => 'code',
                 'scope' => $scope,
                 'state' => $this->config['state'],
-            ]) + $queryParams;
+        ]) + $queryParams;
 
         // If the list of scopes contains plus.login, add request_visible_actions
         // to auth URL.
@@ -518,7 +517,7 @@ class Client
      * authentication
      *
      * @see https://developers.google.com/identity/protocols/application-default-credentials
-     * @param boolean $useAppCreds
+     * @param bool $useAppCreds
      */
     public function useApplicationDefaultCredentials($useAppCreds = true)
     {
@@ -932,7 +931,7 @@ class Client
      * @template T
      * @param RequestInterface $request
      * @param class-string<T>|false|null $expectedClass
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      * @return mixed|T|ResponseInterface
      */
     public function execute(RequestInterface $request, $expectedClass = null)
@@ -1014,7 +1013,7 @@ class Client
      * alias for setAuthConfig
      *
      * @param string $file the configuration file
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      * @deprecated
      */
     public function setAuthConfigFile($file)
@@ -1028,7 +1027,7 @@ class Client
      * the "Download JSON" button on in the Google Developer
      * Console.
      * @param string|array $config the configuration json
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      */
     public function setAuthConfig($config)
     {
@@ -1087,7 +1086,7 @@ class Client
      * The file should contain 'kid' and 'privateKeyPem' fields.
      *
      * @param string|array $config Path to JSON file or array with config
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      */
     public function setJwtBearerAuthConfig($config)
     {
@@ -1107,13 +1106,21 @@ class Client
             throw new InvalidArgumentException('kid is required in serviceAccount.json');
         }
 
+        if (!isset($config['clientId']) || empty($config['clientId'])) {
+            throw new InvalidArgumentException('clientId is required in serviceAccount.json');
+        }
+
         if (!isset($config['privateKeyPem']) || empty($config['privateKeyPem'])) {
             throw new InvalidArgumentException('privateKeyPem is required in serviceAccount.json');
         }
 
+        $this->setClientId($config['clientId']);
+
         $this->credentials = new JwtBearerCredentials(
             $config['kid'],
-            $config['privateKeyPem']
+            $config['privateKeyPem'],
+            null,
+            $config['clientId'],
         );
     }
 
@@ -1122,7 +1129,7 @@ class Client
      *
      * @param string $file Path to serviceAccount.json file
      * @return Client Returns $this for method chaining
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      */
     public function fromServiceAccountFile($file)
     {
@@ -1134,7 +1141,7 @@ class Client
      * Declare whether making API calls should make the call immediately, or
      * return a request which can be called with ->execute();
      *
-     * @param boolean $defer True if calls should not be executed right away.
+     * @param bool $defer True if calls should not be executed right away.
      */
     public function setDefer($defer)
     {
@@ -1143,7 +1150,7 @@ class Client
 
     /**
      * Whether or not to return raw requests
-     * @return boolean
+     * @return bool
      */
     public function shouldDefer()
     {
@@ -1198,7 +1205,6 @@ class Client
         if (!$this->cache) {
             $this->cache = $this->createDefaultCache();
         }
-
         return $this->cache;
     }
 
@@ -1296,13 +1302,6 @@ class Client
                 'base_url' => $this->config['base_path'],
                 'defaults' => ['exceptions' => false],
             ];
-            if ($this->isAppEngine()) {
-                if (class_exists(StreamHandler::class)) {
-                    // set StreamHandler on AppEngine by default
-                    $options['handler'] = new StreamHandler();
-                    $options['defaults']['verify'] = '/etc/ca-certificates.crt';
-                }
-            }
         } elseif (6 === $guzzleVersion || 7 === $guzzleVersion) {
             // guzzle 6 or 7
             $options = [

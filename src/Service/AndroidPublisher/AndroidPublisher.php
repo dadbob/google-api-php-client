@@ -43,7 +43,7 @@ class AndroidPublisher extends Service
     /**
      * Constructs the internal representation of the AndroidPublisher service.
      *
-     * @param \Google\Client|array $clientOrConfig The client used to deliver requests, or a
+     * @param \Appning\Client|array $clientOrConfig The client used to deliver requests, or a
      *                                             config array to pass to a new Client instance.
      */
     public function __construct($clientOrConfig = [])

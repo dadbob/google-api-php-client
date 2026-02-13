@@ -52,7 +52,7 @@ class Service
 
     /**
    * Return the associated Google\Client class.
-   * @return \Google\Client
+   * @return \Appning\Client
    */
     public function getClient()
     {

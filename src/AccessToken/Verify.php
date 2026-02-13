@@ -155,7 +155,7 @@ class Verify
      *
      * @param string $url location
      * @return array certificates
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      */
     private function retrieveCertsFromLocation($url)
     {

@@ -51,7 +51,7 @@ class Resource
     /** @var string $apiVersion */
     protected $apiVersion;
 
-    /** @var \Google\Client $client */
+    /** @var \Appning\Client $client */
     private $client;
 
     /** @var string $serviceName */
@@ -66,7 +66,7 @@ class Resource
     /** @var array $methods */
     private $methods;
 
-    /** @var \Google\Service $service */
+    /** @var \Appning\Service $service */
     protected $service;
 
     public function __construct($service, $serviceName, $resourceName, $resource)
@@ -90,7 +90,7 @@ class Resource
      * @param array $arguments
      * @param class-string<T> $expectedClass - optional, the expected class name
      * @return mixed|T|ResponseInterface|RequestInterface
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      */
     public function call($name, $arguments, $expectedClass = null)
     {

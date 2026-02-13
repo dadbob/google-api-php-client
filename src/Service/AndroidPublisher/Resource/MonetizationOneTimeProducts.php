@@ -62,10 +62,10 @@ class MonetizationOneTimeProducts extends Resource
      * Batch update one-time products.
      *
      * @param string $packageName The package name of the application.
-     * @param array|\Google\Model $body Request body data. Can be an array or a Model object
+     * @param array|\Appning\Model $body Request body data. Can be an array or a Model object
      *                                  (e.g., Google\Service\AndroidPublisher\BatchUpdateOneTimeProductsRequest
      *                                  from google/apiclient-services).
-     * @param array $jwtClaims Optional JWT claims to include in the token (iss and sub default to $packageName)
+     * @param array $jwtClaims Optional JWT claims to include in the token (iss and sub default to clientId from serviceAccount.json)
      * @param array $optParams Optional parameters
      * @return mixed The decoded response body
      * @throws GoogleException
@@ -117,7 +117,9 @@ class MonetizationOneTimeProducts extends Resource
     /**
      * Generate JWT token with claims.
      *
-     * @param string $packageName The package name (used as default iss and sub)
+     * Uses clientId from serviceAccount.json for iss and sub when available.
+     *
+     * @param string $packageName The package name (fallback for iss/sub when clientId is not set)
      * @param array $jwtClaims Optional additional JWT claims
      * @return string The signed JWT token
      * @throws GoogleException
@@ -131,10 +133,11 @@ class MonetizationOneTimeProducts extends Resource
             throw new GoogleException('JWT Bearer credentials are required. Use fromServiceAccountFile() to set credentials.');
         }
 
-        // Set default iss and sub to packageName
+        // Use clientId from serviceAccount.json for iss and sub; fallback to packageName
+        $issSub = $credentials->getClientId() ?? $client->getClientId() ?? $packageName;
         $claims = array_merge([
-            'iss' => $packageName,
-            'sub' => $packageName,
+            'iss' => $issSub,
+            'sub' => $issSub,
         ], $jwtClaims);
 
         return $credentials->generateToken($claims);
