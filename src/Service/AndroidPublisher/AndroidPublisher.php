@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-namespace Google\Service\AndroidPublisher;
+namespace Appning\Service\AndroidPublisher;
 
-use Google\Service;
-use Google\Service\AndroidPublisher\Resource\MonetizationOneTimeProducts;
+use Appning\Service;
+use Appning\Service\AndroidPublisher\Resource\MonetizationOneTimeProducts;
 
 /**
  * Service definition for AndroidPublisher (v3).
@@ -31,8 +31,8 @@ use Google\Service\AndroidPublisher\Resource\MonetizationOneTimeProducts;
  */
 class AndroidPublisher extends Service
 {
-    public $rootUrl = 'http://product.faa.local.faurecia-aptoide.com/api/8.20240517';
-    public $rootUrlTemplate = 'http://product.faa.local.faurecia-aptoide.com/api/8.20240517';
+    public $rootUrl = 'https://product.faa.faurecia-aptoide.com/api/8.20240517';
+    public $rootUrlTemplate = 'https://product.faa.faurecia-aptoide.com/api/8.20240517';
     public $servicePath = '';
     public $version = 'v3';
     public $serviceName = 'androidpublisher';
@@ -43,7 +43,7 @@ class AndroidPublisher extends Service
     /**
      * Constructs the internal representation of the AndroidPublisher service.
      *
-     * @param \Google\Client|array $clientOrConfig The client used to deliver requests, or a
+     * @param \Appning\Client|array $clientOrConfig The client used to deliver requests, or a
      *                                             config array to pass to a new Client instance.
      */
     public function __construct($clientOrConfig = [])

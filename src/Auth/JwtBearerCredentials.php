@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
-namespace Google\Auth;
+namespace Appning\Auth;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use InvalidArgumentException;
+use Google\Auth\FetchAuthTokenInterface;
+
 
 /**
  * Credentials that generate RS256 JWT Bearer tokens with a kid header.
@@ -50,11 +52,17 @@ class JwtBearerCredentials implements FetchAuthTokenInterface
     private $lastToken;
 
     /**
+     * @var string|null The client ID from serviceAccount.json (used for iss and sub claims)
+     */
+    private $clientId;
+
+    /**
      * @param string $kid The Key ID (kid) to include in JWT header
      * @param string $privateKeyPem The RSA private key in PEM format
      * @param JWT|null $jwt Optional JWT service instance
+     * @param string|null $clientId Optional client ID from serviceAccount.json (used for iss and sub claims)
      */
-    public function __construct($kid, $privateKeyPem, ?JWT $jwt = null)
+    public function __construct($kid, $privateKeyPem, ?JWT $jwt = null, ?string $clientId = null)
     {
         if (empty($kid)) {
             throw new InvalidArgumentException('kid is required');
@@ -66,16 +74,28 @@ class JwtBearerCredentials implements FetchAuthTokenInterface
         $this->kid = $kid;
         $this->privateKeyPem = $privateKeyPem;
         $this->jwt = $jwt ?: $this->getJwtService();
+        $this->clientId = $clientId;
     }
 
     /**
      * Generate a JWT Bearer token with custom claims.
+     *
+     * When iss/sub are not provided, uses clientId from serviceAccount.json when set.
      *
      * @param array $claims JWT claims (iss, sub, exp, iat, etc.)
      * @return string The signed JWT token
      */
     public function generateToken(array $claims = [])
     {
+        // Default iss and sub from clientId (serviceAccount.json) when not provided
+        $issSub = $this->clientId ?? 'jwt-bearer';
+        if (!isset($claims['iss'])) {
+            $claims['iss'] = $issSub;
+        }
+        if (!isset($claims['sub'])) {
+            $claims['sub'] = $issSub;
+        }
+
         // Set default expiration (1 hour from now) if not provided
         $now = time();
         if (!isset($claims['exp'])) {
@@ -115,11 +135,13 @@ class JwtBearerCredentials implements FetchAuthTokenInterface
      */
     public function fetchAuthToken(?callable $httpHandler = null)
     {
-        // Generate a basic token with minimal claims
-        // In practice, you should use generateToken() with specific claims
+        // Use clientId from serviceAccount.json for iss and sub when set
+        $iss = $this->clientId ?? 'jwt-bearer';
+        $sub = $this->clientId ?? 'jwt-bearer';
+
         $token = $this->generateToken([
-            'iss' => 'jwt-bearer',
-            'sub' => 'jwt-bearer',
+            'iss' => $iss,
+            'sub' => $sub,
         ]);
 
         return [
@@ -155,6 +177,16 @@ class JwtBearerCredentials implements FetchAuthTokenInterface
     public function getKid()
     {
         return $this->kid;
+    }
+
+    /**
+     * Get the client ID from serviceAccount.json (used for iss and sub claims).
+     *
+     * @return string|null
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
     }
 
     /**

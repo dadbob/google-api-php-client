@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace Google\AccessToken;
+namespace Appning\AccessToken;
 
 use DateTime;
 use DomainException;
@@ -27,7 +27,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
 use Google\Auth\Cache\MemoryCacheItemPool;
-use Google\Exception as GoogleException;
+use Appning\Exception as GoogleException;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use InvalidArgumentException;
@@ -155,7 +155,7 @@ class Verify
      *
      * @param string $url location
      * @return array certificates
-     * @throws \Google\Exception
+     * @throws \Appning\Exception
      */
     private function retrieveCertsFromLocation($url)
     {

@@ -1,9 +1,9 @@
 {
-    "name": "google/apiclient",
+    "name": "appning/apiclient",
     "type": "library",
     "description": "Client library for Google APIs",
-    "keywords": ["google"],
-    "homepage": "http://developers.google.com/api-client-library/php",
+    "keywords": ["appning"],
+    "homepage": "http://developers.appning.com/api-client-library/php",
     "license": "Apache-2.0",
     "require": {
         "php": "^8.1",
@@ -30,15 +30,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Google\\": "src/",
-            "Google\\Service\\AndroidPublisher\\": "src/Service/AndroidPublisher/"
-        },
-        "files": [
-            "src/aliases.php"
-        ],
-        "classmap": [
-            "src/aliases.php"
-        ]
+            "Appning\\": "src/",
+            "Appning\\Service\\AndroidPublisher\\": "src/Service/AndroidPublisher/"
+        }
     },
     "extra": {
         "branch-alias": {

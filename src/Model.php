@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-namespace Google;
+namespace Appning;
 
-use Google\Exception as GoogleException;
+use Appning\Exception as GoogleException;
 use ReflectionObject;
 use ReflectionProperty;
 use stdClass;
@@ -241,7 +241,7 @@ class Model implements \ArrayAccess
 
     /**
      * Verify if $obj is an array.
-     * @throws \Google\Exception Thrown if $obj isn't an array.
+     * @throws \Appning\Exception Thrown if $obj isn't an array.
      * @param array $obj Items that should be validated.
      * @param string $method Method expecting an array as an argument.
      */
